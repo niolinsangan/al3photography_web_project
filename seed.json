@@ -1,0 +1,110 @@
+{
+  "hero": {
+    "image": "assets/images/banner.jpeg",
+    "eyebrow": "AL3 Photography",
+    "title": "Capturing Timeless Moments In Pure Contrast",
+    "subtitle": "Specializing in high-contrast black and white visual storytelling. Transforming raw emotion, biodiversity, and expeditions into enduring monochrome fine art."
+  },
+  "about": {
+    "image": "assets/images/about/portrait.jpg",
+    "name": "Al Linsangan",
+    "role": "Principal Photographer",
+    "years": "15+ Years",
+    "bio": "With over a decade and a half behind the lens, Al Linsangan strips away color distractions to reveal raw depth, biodiversity, and geological geometry. Every frame captured under AL3 Photography emphasizes contrast, shadow play, and authentic narrative.",
+    "quote": "When you remove color, you don't lose information—you gain focus. You see the soul of the subject, the quality of light, and the timelessness of the moment."
+  },
+  "gallery": [
+    {
+      "id": "g1",
+      "title": "Mist Over Monoliths",
+      "category": "nature",
+      "image": "assets/images/gallery/nature-01.jpg",
+      "camera": "Leica M10 Monochrom",
+      "lens": "35mm f/1.4 Summilux",
+      "iso": "ISO 200",
+      "shutter": "1/500s at f/5.6"
+    },
+    {
+      "id": "g2",
+      "title": "Monochrome Majesty",
+      "category": "wildlife",
+      "image": "assets/images/gallery/wildlife-01.jpg",
+      "camera": "Nikon Z9",
+      "lens": "400mm f/2.8 TC VR S",
+      "iso": "ISO 800",
+      "shutter": "1/1600s at f/2.8"
+    },
+    {
+      "id": "g3",
+      "title": "Coastline Contours",
+      "category": "aerial",
+      "image": "assets/images/gallery/aerial-01.jpg",
+      "camera": "DJI Mavic 3 Cine",
+      "lens": "24mm Hasselblad",
+      "iso": "ISO 100",
+      "shutter": "1/1000s at f/4.0"
+    },
+    {
+      "id": "g4",
+      "title": "Pelagic Rays & Shadows",
+      "category": "underwater",
+      "image": "assets/images/gallery/underwater-01.jpg",
+      "camera": "Canon EOS R5 (Housing)",
+      "lens": "8-15mm Fisheye",
+      "iso": "ISO 400",
+      "shutter": "1/250s at f/8.0"
+    },
+    {
+      "id": "g5",
+      "title": "Architectural Solitude",
+      "category": "resorts",
+      "image": "assets/images/gallery/resorts-01.jpg",
+      "camera": "Sony A7R V",
+      "lens": "16-35mm f/2.8 GM",
+      "iso": "ISO 100",
+      "shutter": "1/125s at f/11"
+    },
+    {
+      "id": "g6",
+      "title": "Guardian of the Crest",
+      "category": "people",
+      "image": "assets/images/gallery/people-01.jpg",
+      "camera": "Leica SL2",
+      "lens": "50mm Summilux-SL",
+      "iso": "ISO 200",
+      "shutter": "1/400s at f/2.0"
+    },
+    {
+      "id": "g7",
+      "title": "Ancient Canopy Preservation",
+      "category": "conservation",
+      "image": "assets/images/gallery/conservation-01.jpg",
+      "camera": "Fujifilm X-T5",
+      "lens": "16-55mm f/2.8",
+      "iso": "ISO 400",
+      "shutter": "1/250s at f/5.6"
+    }
+  ],
+  "stories": [
+    {
+      "id": "story-1",
+      "title": "Echoes Above the Treeline",
+      "label": "Expedition Essay #01",
+      "tag": "Alpine & Ridge Lines",
+      "excerpt": "A 14-day solo trek documenting weather shifts, granite monoliths, and silent high-altitude basins in stark monochrome tones.",
+      "readTime": "12",
+      "cover": "assets/images/stories/story-01.jpg",
+      "body": "Write the full essay here in the admin page.\n\nSeparate paragraphs with a blank line. Start a line with ## for a heading. Drop an image onto this box to insert it."
+    },
+    {
+      "id": "story-2",
+      "title": "Shadow & Tide: Island Chronicles",
+      "label": "Expedition Essay #02",
+      "tag": "Marine & Coastal Documentation",
+      "excerpt": "Fieldnotes from marine biodiversity surveys, capturing artisanal fishing communities and underwater coral ecosystems across isolated reefs.",
+      "readTime": "18",
+      "cover": "assets/images/stories/story-02.jpg",
+      "body": "Write the full essay here in the admin page.\n\nSeparate paragraphs with a blank line. Start a line with ## for a heading. Drop an image onto this box to insert it."
+    }
+  ]
+}

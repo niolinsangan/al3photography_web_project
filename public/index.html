@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AL3 Photography | Timeless Monochrome</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0a0a0a',
+                        cardBg: '#121212',
+                        dropdownBg: '#1e1e1e',
+                        borderDark: '#262626',
+                        accentGray: '#333333',
+                        lightText: '#f5f5f5',
+                        mutedText: '#888888',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-darkBg text-lightText font-sans antialiased selection:bg-lightText selection:text-darkBg">
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-darkBg/95 backdrop-blur-md border-b border-borderDark transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="text-xl sm:text-2xl font-bold tracking-widest text-lightText hover:opacity-80 transition-opacity">
+                AL3 <span class="text-xs tracking-normal font-normal text-mutedText block sm:inline sm:ml-1">PHOTOGRAPHY</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold tracking-wider">
+                <a href="#home" class="hover:text-mutedText transition-colors">HOME</a>
+                
+                <!-- Portfolio Dropdown Menu Container -->
+                <div class="relative group">
+                    <a href="#portfolio" class="flex items-center space-x-1 hover:text-mutedText transition-colors py-2">
+                        <span>PORTFOLIO</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] ml-1 group-hover:rotate-180 transition-transform duration-200"></i>
+                    </a>
+                    
+                    <!-- Dropdown Content Box -->
+                    <div class="absolute left-0 mt-0 w-64 bg-dropdownBg border border-borderDark shadow-2xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-3">
+                        <div class="text-[10px] font-mono text-mutedText uppercase tracking-widest px-3 py-1 mb-1 border-b border-borderDark/60">
+                            PORTFOLIO DROPDOWN
+                        </div>
+                        <a href="#portfolio" data-subfilter="nature" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">Nature & Landscapes</a>
+                        <a href="#portfolio" data-subfilter="wildlife" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">Wildlife & Biodiversity</a>
+                        <a href="#portfolio" data-subfilter="aerial" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">Aerial Perspectives</a>
+                        <a href="#portfolio" data-subfilter="underwater" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">Underwater & Marine Life</a>
+                        <a href="#portfolio" data-subfilter="resorts" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">Resorts & Hospitality</a>
+                        <a href="#portfolio" data-subfilter="people" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">People & Nature</a>
+                        <a href="#portfolio" data-subfilter="conservation" class="portfolio-dropdown-item block px-3 py-2 text-sm text-lightText hover:bg-cardBg hover:text-white transition-colors">Conservation & Environment</a>
+                    </div>
+                </div>
+
+                <a href="#stories" class="hover:text-mutedText transition-colors">STORIES</a>
+                <a href="#about" class="hover:text-mutedText transition-colors">ABOUT</a>
+                <a href="#contact" class="hover:text-mutedText transition-colors">CONTACT</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="hidden md:block">
+                <a href="#contact" class="px-5 py-2.5 text-xs font-semibold tracking-wider border border-lightText text-lightText hover:bg-lightText hover:text-darkBg transition-all duration-300 rounded-none">
+                    BOOK A SESSION
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobileMenuBtn" class="md:hidden text-lightText focus:outline-none p-2" aria-label="Toggle Navigation Menu">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-cardBg border-b border-borderDark px-6 py-6 transition-all">
+            <div class="flex flex-col space-y-4 text-sm font-semibold tracking-wider">
+                <a href="#home" class="mobile-nav-link hover:text-mutedText transition-colors">HOME</a>
+                
+                <!-- Mobile Portfolio Accordion -->
+                <div>
+                    <button id="mobilePortfolioBtn" class="flex items-center justify-between w-full hover:text-mutedText transition-colors py-1">
+                        <span>PORTFOLIO</span>
+                        <i id="mobilePortfolioArrow" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                    </button>
+                    <div id="mobilePortfolioDropdown" class="hidden pl-4 mt-2 space-y-2 border-l border-borderDark bg-dropdownBg p-3 rounded-sm">
+                        <div class="text-[10px] font-mono text-mutedText uppercase tracking-widest mb-1">PORTFOLIO DROPDOWN</div>
+                        <a href="#portfolio" data-subfilter="nature" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">Nature & Landscapes</a>
+                        <a href="#portfolio" data-subfilter="wildlife" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">Wildlife & Biodiversity</a>
+                        <a href="#portfolio" data-subfilter="aerial" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">Aerial Perspectives</a>
+                        <a href="#portfolio" data-subfilter="underwater" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">Underwater & Marine Life</a>
+                        <a href="#portfolio" data-subfilter="resorts" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">Resorts & Hospitality</a>
+                        <a href="#portfolio" data-subfilter="people" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">People & Nature</a>
+                        <a href="#portfolio" data-subfilter="conservation" class="portfolio-dropdown-item mobile-nav-link block text-xs py-1 text-lightText">Conservation & Environment</a>
+                    </div>
+                </div>
+
+                <a href="#stories" class="mobile-nav-link hover:text-mutedText transition-colors">STORIES</a>
+                <a href="#about" class="mobile-nav-link hover:text-mutedText transition-colors">ABOUT</a>
+                <a href="#contact" class="mobile-nav-link hover:text-mutedText transition-colors">CONTACT</a>
+                <a href="#contact" class="mobile-nav-link text-center px-4 py-2 border border-lightText text-lightText hover:bg-lightText hover:text-darkBg transition-all mt-2">
+                    BOOK A SESSION
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="pt-20">
+        <!-- Banner: 1080 x 560, shown whole (never cropped), centered under the navbar -->
+        <div class="px-6 pt-6">
+            <div class="w-full max-w-[1080px] mx-auto aspect-[1080/560]">
+                <img id="heroImg" src="assets/images/banner.jpeg"
+                     alt="AL3 Photography banner"
+                     class="w-full h-full object-contain">
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center px-6 py-16">
+            <p id="heroEyebrow" class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-mutedText mb-4">AL3 Photography</p>
+            <h1 id="heroTitle" class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-lightText uppercase leading-tight mb-6">
+                Capturing Timeless Moments <br class="hidden sm:block"> In Pure Contrast
+            </h1>
+            <p id="heroSub" class="text-sm sm:text-lg text-mutedText max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                Specializing in high-contrast black and white visual storytelling. Transforming raw emotion, biodiversity, and expeditions into enduring monochrome fine art.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#portfolio" class="w-full sm:w-auto px-8 py-3.5 bg-lightText text-darkBg text-xs font-bold tracking-widest hover:bg-neutral-300 transition-all uppercase">
+                    Explore Portfolio
+                </a>
+                <a href="#stories" class="w-full sm:w-auto px-8 py-3.5 border border-borderDark bg-cardBg/80 text-lightText text-xs font-bold tracking-widest hover:border-lightText transition-all uppercase">
+                    Read Stories
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO SECTION -->
+    <section id="portfolio" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-borderDark pb-6">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-wider uppercase mb-2">Portfolio Collections</h2>
+                <p class="text-sm text-mutedText">Select a category below or choose from the Portfolio Dropdown menu.</p>
+            </div>
+
+            <!-- Category Filter Buttons -->
+            <div class="flex flex-wrap gap-2 mt-6 md:mt-0" id="filterTabs">
+                <button data-filter="all" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-lightText text-darkBg border border-lightText transition-all">All</button>
+                <button data-filter="nature" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">Nature & Landscapes</button>
+                <button data-filter="wildlife" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">Wildlife</button>
+                <button data-filter="aerial" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">Aerial</button>
+                <button data-filter="underwater" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">Underwater</button>
+                <button data-filter="resorts" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">Resorts</button>
+                <button data-filter="people" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">People & Nature</button>
+                <button data-filter="conservation" class="filter-btn px-3 py-1.5 text-xs font-semibold tracking-widest uppercase bg-cardBg text-mutedText border border-borderDark hover:text-lightText hover:border-lightText transition-all">Conservation</button>
+            </div>
+        </div>
+
+        <!-- Masonry Photo Grid -->
+        <div class="masonry-grid" id="galleryGrid">
+            
+            <!-- Item 1: Nature -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="nature"
+                 data-title="Mist Over Monoliths"
+                 data-category-label="Nature & Landscapes"
+                 data-camera="Leica M10 Monochrom"
+                 data-lens="35mm f/1.4 Summilux"
+                 data-iso="ISO 200"
+                 data-shutter="1/500s at f/5.6"
+                 data-src="assets/images/gallery/nature-01.jpg">
+                <img src="assets/images/gallery/nature-01.jpg" loading="lazy" 
+                     alt="Mist Over Monoliths" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">Nature & Landscapes</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Mist Over Monoliths</h3>
+                </div>
+            </div>
+
+            <!-- Item 2: Wildlife -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="wildlife"
+                 data-title="Monochrome Majesty"
+                 data-category-label="Wildlife & Biodiversity"
+                 data-camera="Nikon Z9"
+                 data-lens="400mm f/2.8 TC VR S"
+                 data-iso="ISO 800"
+                 data-shutter="1/1600s at f/2.8"
+                 data-src="assets/images/gallery/wildlife-01.jpg">
+                <img src="assets/images/gallery/wildlife-01.jpg" loading="lazy" 
+                     alt="Monochrome Majesty" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">Wildlife & Biodiversity</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Monochrome Majesty</h3>
+                </div>
+            </div>
+
+            <!-- Item 3: Aerial -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="aerial"
+                 data-title="Coastline Contours"
+                 data-category-label="Aerial Perspectives"
+                 data-camera="DJI Mavic 3 Cine"
+                 data-lens="24mm Hasselblad"
+                 data-iso="ISO 100"
+                 data-shutter="1/1000s at f/4.0"
+                 data-src="assets/images/gallery/aerial-01.jpg">
+                <img src="assets/images/gallery/aerial-01.jpg" loading="lazy" 
+                     alt="Coastline Contours" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">Aerial Perspectives</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Coastline Contours</h3>
+                </div>
+            </div>
+
+            <!-- Item 4: Underwater -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="underwater"
+                 data-title="Pelagic Rays & Shadows"
+                 data-category-label="Underwater & Marine Life"
+                 data-camera="Canon EOS R5 (Housing)"
+                 data-lens="8-15mm Fisheye"
+                 data-iso="ISO 400"
+                 data-shutter="1/250s at f/8.0"
+                 data-src="assets/images/gallery/underwater-01.jpg">
+                <img src="assets/images/gallery/underwater-01.jpg" loading="lazy" 
+                     alt="Pelagic Rays & Shadows" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">Underwater & Marine Life</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Pelagic Rays & Shadows</h3>
+                </div>
+            </div>
+
+            <!-- Item 5: Resorts & Hospitality -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="resorts"
+                 data-title="Architectural Solitude"
+                 data-category-label="Resorts & Hospitality"
+                 data-camera="Sony A7R V"
+                 data-lens="16-35mm f/2.8 GM"
+                 data-iso="ISO 100"
+                 data-shutter="1/125s at f/11"
+                 data-src="assets/images/gallery/resorts-01.jpg">
+                <img src="assets/images/gallery/resorts-01.jpg" loading="lazy" 
+                     alt="Architectural Solitude" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">Resorts & Hospitality</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Architectural Solitude</h3>
+                </div>
+            </div>
+
+            <!-- Item 6: People & Nature -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="people"
+                 data-title="Guardian of the Crest"
+                 data-category-label="People & Nature"
+                 data-camera="Leica SL2"
+                 data-lens="50mm Summilux-SL"
+                 data-iso="ISO 200"
+                 data-shutter="1/400s at f/2.0"
+                 data-src="assets/images/gallery/people-01.jpg">
+                <img src="assets/images/gallery/people-01.jpg" loading="lazy" 
+                     alt="Guardian of the Crest" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">People & Nature</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Guardian of the Crest</h3>
+                </div>
+            </div>
+
+            <!-- Item 7: Conservation -->
+            <div class="masonry-item gallery-card group cursor-pointer relative overflow-hidden bg-cardBg border border-borderDark"
+                 data-category="conservation"
+                 data-title="Ancient Canopy Preservation"
+                 data-category-label="Conservation & Environment"
+                 data-camera="Fujifilm X-T5"
+                 data-lens="16-55mm f/2.8"
+                 data-iso="ISO 400"
+                 data-shutter="1/250s at f/5.6"
+                 data-src="assets/images/gallery/conservation-01.jpg">
+                <img src="assets/images/gallery/conservation-01.jpg" loading="lazy" 
+                     alt="Ancient Canopy Preservation" 
+                     class="w-full h-auto  object-cover transition-transform duration-500 group-hover:scale-105">
+                <div class="absolute inset-0 bg-darkBg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <span class="text-xs font-mono text-mutedText tracking-widest uppercase mb-1">Conservation & Environment</span>
+                    <h3 class="text-lg font-bold text-lightText tracking-wide">Ancient Canopy Preservation</h3>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- TRAVEL STORIES & EXPEDITIONS SECTION -->
+    <section id="stories" class="py-24 bg-cardBg border-y border-borderDark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mb-16">
+                <p class="text-xs font-mono tracking-widest uppercase text-mutedText mb-2">Narratives & Documentary Features</p>
+                <h2 class="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-lightText mb-4">Travel Stories & Expeditions</h2>
+                <div class="w-16 h-0.5 bg-lightText mb-6"></div>
+                <p class="text-sm sm:text-base text-mutedText font-light leading-relaxed">
+                    Longer photo essays, fieldwork journals, and documentary features exploring remote ecosystems, indigenous cultures, and environmental conservation projects.
+                </p>
+            </div>
+
+            <div id="storiesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Story Feature 1 -->
+                <article class="group cursor-pointer border border-borderDark bg-darkBg overflow-hidden flex flex-col justify-between hover:border-lightText transition-all duration-300">
+                    <div>
+                        <div class="relative h-64 sm:h-80 overflow-hidden">
+                            <img src="assets/images/stories/story-01.jpg" loading="lazy" 
+                                 alt="High Sierra Expedition" 
+                                 class="w-full h-full object-cover  transition-transform duration-500 group-hover:scale-105">
+                            <span class="absolute top-4 left-4 bg-darkBg/90 border border-borderDark px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-lightText">
+                                Expedition Essay #01
+                            </span>
+                        </div>
+                        <div class="p-8">
+                            <span class="text-xs font-mono text-mutedText uppercase tracking-widest">Alpine & Ridge Lines</span>
+                            <h3 class="text-2xl font-bold uppercase tracking-wide text-lightText mt-2 mb-4 group-hover:text-mutedText transition-colors">
+                                Echoes Above the Treeline
+                            </h3>
+                            <p class="text-sm text-mutedText font-light leading-relaxed mb-6">
+                                A 14-day solo trek documenting weather shifts, granite monoliths, and silent high-altitude basins in stark monochrome tones.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-8 pb-8 flex justify-between items-center text-xs font-mono text-mutedText border-t border-borderDark/60 pt-4">
+                        <span>12 min read</span>
+                        <span class="text-lightText font-bold uppercase tracking-widest flex items-center group-hover:translate-x-1 transition-transform">Read Essay <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></span>
+                    </div>
+                </article>
+
+                <!-- Story Feature 2 -->
+                <article class="group cursor-pointer border border-borderDark bg-darkBg overflow-hidden flex flex-col justify-between hover:border-lightText transition-all duration-300">
+                    <div>
+                        <div class="relative h-64 sm:h-80 overflow-hidden">
+                            <img src="assets/images/stories/story-02.jpg" loading="lazy" 
+                                 alt="Archipelago Waters Expedition" 
+                                 class="w-full h-full object-cover  transition-transform duration-500 group-hover:scale-105">
+                            <span class="absolute top-4 left-4 bg-darkBg/90 border border-borderDark px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-lightText">
+                                Expedition Essay #02
+                            </span>
+                        </div>
+                        <div class="p-8">
+                            <span class="text-xs font-mono text-mutedText uppercase tracking-widest">Marine & Coastal Documentation</span>
+                            <h3 class="text-2xl font-bold uppercase tracking-wide text-lightText mt-2 mb-4 group-hover:text-mutedText transition-colors">
+                                Shadow & Tide: Island Chronicles
+                            </h3>
+                            <p class="text-sm text-mutedText font-light leading-relaxed mb-6">
+                                Fieldnotes from marine biodiversity surveys, capturing artisanal fishing communities and underwater coral ecosystems across isolated reefs.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-8 pb-8 flex justify-between items-center text-xs font-mono text-mutedText border-t border-borderDark/60 pt-4">
+                        <span>18 min read</span>
+                        <span class="text-lightText font-bold uppercase tracking-widest flex items-center group-hover:translate-x-1 transition-transform">Read Essay <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION (Al Linsangan) -->
+    <section id="about" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Photographer Portrait -->
+            <div class="lg:col-span-5 relative">
+                <div class="border border-borderDark p-2 bg-cardBg">
+                    <img id="aboutImg" src="assets/images/about/portrait.jpg" loading="lazy" 
+                         alt="Al Linsangan Photographer Profile" 
+                         class="w-full h-auto  object-cover">
+                </div>
+                <div class="absolute -bottom-6 -right-6 bg-cardBg border border-borderDark p-4 hidden sm:block">
+                    <p class="text-xs font-mono tracking-widest uppercase text-mutedText">Experience</p>
+                    <p id="aboutYears" class="text-xl font-bold text-lightText">15+ Years</p>
+                </div>
+            </div>
+
+            <!-- Bio Text -->
+            <div class="lg:col-span-7 space-y-6">
+                <p class="text-xs font-mono tracking-widest uppercase text-mutedText">About The Photographer</p>
+                <h2 class="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-lightText">
+                    <span id="aboutName">Al Linsangan</span> <span class="text-mutedText font-light">| <span id="aboutRole">Principal Photographer</span></span>
+                </h2>
+                <div class="w-16 h-0.5 bg-lightText"></div>
+                <p id="aboutBio" class="text-mutedText leading-relaxed font-light text-base sm:text-lg">
+                    With over a decade and a half behind the lens, Al Linsangan strips away color distractions to reveal raw depth, biodiversity, and geological geometry. Every frame captured under AL3 Photography emphasizes contrast, shadow play, and authentic narrative.
+                </p>
+                <p id="aboutQuote" class="text-mutedText leading-relaxed font-light text-sm sm:text-base">
+                    "When you remove color, you don't lose information—you gain focus. You see the soul of the subject, the quality of light, and the timelessness of the moment."
+                </p>
+
+                <!-- Highlights List -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-4 border-t border-borderDark">
+                    <div>
+                        <p class="text-xs font-mono uppercase text-mutedText">Focus</p>
+                        <p class="text-sm font-bold text-lightText mt-1">Nature & Expeditions</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-mono uppercase text-mutedText">Location</p>
+                        <p class="text-sm font-bold text-lightText mt-1">Global / On-Location</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-mono uppercase text-mutedText">Aesthetic</p>
+                        <p class="text-sm font-bold text-lightText mt-1">Monochrome Fine Art</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CONTACT / INQUIRY SECTION -->
+    <section id="contact" class="py-24 bg-cardBg border-t border-borderDark">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <p class="text-xs font-mono tracking-widest uppercase text-mutedText mb-2">Get In Touch</p>
+                <h2 class="text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-lightText mb-4">Start A Project / Commission</h2>
+                <p class="text-sm text-mutedText max-w-lg mx-auto font-light">
+                    Direct inquiry for Al Linsangan. Please fill out the form below and we will get back to you within 24–48 hours.
+                </p>
+            </div>
+
+            <!-- Contact Form -->
+            <form id="contactForm" class="space-y-6">
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-mutedText mb-2" for="name">Your Name *</label>
+                        <input type="text" id="name" required class="w-full bg-darkBg border border-borderDark px-4 py-3 text-sm text-lightText focus:outline-none focus:border-lightText transition-colors rounded-none" placeholder="e.g. Juan Dela Cruz">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-mutedText mb-2" for="email">Email Address *</label>
+                        <input type="email" id="email" required class="w-full bg-darkBg border border-borderDark px-4 py-3 text-sm text-lightText focus:outline-none focus:border-lightText transition-colors rounded-none" placeholder="e.g. juan@example.com">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-mutedText mb-2" for="serviceType">Category Inquiry</label>
+                        <select id="serviceType" name="serviceType" class="w-full bg-darkBg border border-borderDark px-4 py-3 text-sm text-lightText focus:outline-none focus:border-lightText transition-colors rounded-none">
+                            <option value="expedition">Expedition / Travel Story</option>
+                            <option value="nature">Nature & Landscape Commission</option>
+                            <option value="resort">Resort & Hospitality Architecture</option>
+                            <option value="conservation">Conservation Documentation</option>
+                            <option value="prints">Fine Art Prints</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono uppercase tracking-wider text-mutedText mb-2" for="date">Target Date</label>
+                        <input type="date" id="date" class="w-full bg-darkBg border border-borderDark px-4 py-3 text-sm text-lightText focus:outline-none focus:border-lightText transition-colors rounded-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono uppercase tracking-wider text-mutedText mb-2" for="message">Project Details / Message *</label>
+                    <textarea id="message" name="message" rows="5" required class="w-full bg-darkBg border border-borderDark px-4 py-3 text-sm text-lightText focus:outline-none focus:border-lightText transition-colors rounded-none" placeholder="Tell us about your event, location, and vision..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-lightText text-darkBg text-xs font-bold uppercase tracking-widest hover:bg-neutral-300 transition-all">
+                    Send Inquiry
+                </button>
+            </form>
+
+            <div id="formError" class="hidden mt-6 p-4 border border-red-400 bg-darkBg text-center">
+                <p class="text-xs font-mono uppercase text-red-300 tracking-widest">Something went wrong. Please try again or email us directly.</p>
+            </div>
+            <div id="formSuccess" class="hidden mt-6 p-4 border border-lightText bg-darkBg text-center">
+                <p class="text-xs font-mono uppercase text-lightText tracking-widest"><i class="fa-solid fa-check-circle mr-2"></i> Inquiry Received! Al Linsangan will respond shortly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-darkBg border-t border-borderDark py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <p class="text-lg font-bold tracking-widest text-lightText">AL3 PHOTOGRAPHY</p>
+                <p class="text-xs text-mutedText mt-1">Fine art monochrome photography</p>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex space-x-6 text-mutedText text-sm">
+                <a href="#" class="hover:text-lightText transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-lightText transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-lightText transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-xs text-mutedText font-mono">
+                &copy; 2026 AL3 Photography. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE LIGHTBOX MODAL WITH EXIF METADATA -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 bg-darkBg/95 backdrop-blur-md hidden flex items-center justify-center p-4 sm:p-8">
+        <button id="closeLightbox" class="absolute top-6 right-6 text-mutedText hover:text-lightText text-2xl p-2 z-10 focus:outline-none">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="max-w-5xl w-full max-h-[90vh] bg-cardBg border border-borderDark flex flex-col md:flex-row overflow-hidden shadow-2xl">
+            <div class="md:w-3/5 bg-black flex items-center justify-center p-2 relative overflow-hidden">
+                <img id="lightboxImg" src="" alt="" class="max-h-[60vh] md:max-h-[80vh] w-auto object-contain ">
+            </div>
+
+            <div class="md:w-2/5 p-6 sm:p-8 flex flex-col justify-between border-t md:border-t-0 md:border-l border-borderDark bg-cardBg">
+                <div>
+                    <span id="lightboxCategory" class="text-xs font-mono uppercase tracking-widest text-mutedText">Category</span>
+                    <h3 id="lightboxTitle" class="text-2xl font-bold uppercase tracking-wide text-lightText mt-1 mb-6">Photo Title</h3>
+
+                    <div class="border-t border-borderDark pt-6 space-y-4">
+                        <p class="text-xs font-mono uppercase tracking-wider text-lightText font-semibold">Camera Details & EXIF</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <span class="block text-mutedText font-mono">CAMERA</span>
+                                <span id="exifCamera" class="font-medium text-lightText">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-mutedText font-mono">LENS</span>
+                                <span id="exifLens" class="font-medium text-lightText">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-mutedText font-mono">ISO</span>
+                                <span id="exifISO" class="font-medium text-lightText">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-mutedText font-mono">EXPOSURE</span>
+                                <span id="exifShutter" class="font-medium text-lightText">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-8 border-t border-borderDark mt-6 flex justify-between items-center">
+                    <span class="text-[10px] font-mono text-mutedText">AL3 PHOTOGRAPHY ARCHIVE</span>
+                    <a href="#contact" id="lightboxInquireBtn" class="px-4 py-2 bg-lightText text-darkBg text-xs font-bold uppercase tracking-wider hover:bg-neutral-300 transition-colors">Inquire</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Custom JavaScript -->
+    <script src="js/main.js" defer></script>
+</body>
+</html>

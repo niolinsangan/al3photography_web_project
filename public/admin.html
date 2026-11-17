@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin | AL3 Photography</title>
+<style>
+:root{--bg:#0a0a0a;--card:#121212;--bd:#262626;--tx:#f5f5f5;--mu:#888;--ac:#f5f5f5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 Inter,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--card);border:1px solid var(--bd);padding:8px 14px;cursor:pointer;letter-spacing:.05em;font-size:12px;text-transform:uppercase}
+.btn:hover{border-color:var(--tx)}.btn.pri{background:var(--tx);color:var(--bg);border-color:var(--tx);font-weight:700}
+.btn:disabled{opacity:.4;cursor:default}.btn.danger:hover{border-color:#f87171;color:#f87171}
+#login{max-width:340px;margin:20vh auto;padding:0 20px}#login h1{font-size:18px;letter-spacing:.2em}
+#login input{width:100%;padding:10px;background:var(--card);border:1px solid var(--bd);margin:12px 0}
+header{position:sticky;top:0;z-index:10;background:rgba(10,10,10,.95);border-bottom:1px solid var(--bd);display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 20px}
+header h1{font-size:15px;letter-spacing:.2em;margin:0 12px 0 0}
+.tab.on{background:var(--tx);color:var(--bg)}.sp{flex:1}#st{color:var(--mu);font-size:12px}#st.d{color:#facc15}
+main{max-width:1100px;margin:0 auto;padding:24px 20px 80px}
+h2{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--mu);margin:28px 0 12px}
+.drop{border:2px dashed var(--bd);padding:22px;text-align:center;color:var(--mu);cursor:pointer;transition:.15s}
+.drop.over{border-color:var(--tx);background:#1a1a1a;color:var(--tx)}.drop.busy{opacity:.5;pointer-events:none}
+.drop.img{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px}.drop.img img{max-height:180px;max-width:100%;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--bd);cursor:grab;position:relative}.card.over{outline:2px solid var(--tx)}
+.card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;pointer-events:none}
+.card .cap{padding:8px 10px}.card .cap b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card small{color:var(--mu)}
+.card .n{position:absolute;top:6px;left:6px;background:#000c;padding:0 7px;font-size:11px;font-family:monospace}
+.f{display:block;margin:12px 0}.f span,.lbl{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:4px}
+.f input,.f select,.f textarea{width:100%;padding:9px 10px;background:var(--bg);border:1px solid var(--bd)}.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--tx)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:600px){.row{grid-template-columns:1fr}}
+.list .item{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--bd);padding:8px;margin-bottom:8px;cursor:grab}
+.list .item.over{outline:2px solid var(--tx)}.list img{width:90px;height:60px;object-fit:cover;pointer-events:none}.list .t{flex:1;min-width:0}
+.modal{position:fixed;inset:0;background:#000d;z-index:20;overflow:auto;padding:20px}
+.modal .box{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--bd);padding:20px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;z-index:30;display:none;font-weight:600}#toast.err{background:#f87171}
+.hint{color:var(--mu);font-size:12px}
+</style>
+</head>
+<body>
+<div id="login">
+  <h1>AL3 ADMIN</h1>
+  <form id="lf"><input type="password" id="pw" placeholder="Password" autocomplete="current-password" autofocus>
+  <button class="btn pri" style="width:100%">Log in</button><p id="le" class="hint" style="color:#f87171"></p></form>
+</div>
+<div id="app" hidden>
+  <header>
+    <h1>AL3 ADMIN</h1>
+    <button class="btn tab" data-t="gallery">Gallery</button>
+    <button class="btn tab" data-t="stories">Stories</button>
+    <button class="btn tab" data-t="home">Homepage</button>
+    <span class="sp"></span><span id="st"></span>
+    <a class="btn" href="/" target="_blank">View site</a>
+    <button class="btn pri" id="save" disabled>Save changes</button>
+    <button class="btn" id="out">Log out</button>
+  </header>
+  <main id="view"></main>
+</div>
+<div id="toast"></div>
+<script>
+const CATS={nature:'Nature & Landscapes',wildlife:'Wildlife & Biodiversity',aerial:'Aerial Perspectives',underwater:'Underwater & Marine Life',resorts:'Resorts & Hospitality',people:'People & Nature',conservation:'Conservation & Environment'};
+const $=s=>document.querySelector(s);
+let C=null,dirty=false,tab='gallery',editing=null,dragIdx=null,dragList=null;
+
+function h(tag,a={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(a)){if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(k==='class')e.className=v;else if(v!==false&&v!=null)e.setAttribute(k,v===true?'':v)}for(const k of kids.flat())if(k!=null)e.append(k.nodeType?k:document.createTextNode(k));return e}
+function toast(m,err){const t=$('#toast');t.textContent=m;t.className=err?'err':'';t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',err?5000:2200)}
+function mark(){dirty=true;$('#save').disabled=false;$('#st').textContent='Unsaved changes';$('#st').className='d'}
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+
+// ---------- auth ----------
+$('#lf').addEventListener('submit',async e=>{e.preventDefault();
+  const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:$('#pw').value})});
+  if(r.ok)start();else $('#le').textContent=(await r.json()).error||'Login failed'});
+$('#out').onclick=async()=>{if(dirty&&!confirm('You have unsaved changes. Log out anyway?'))return;dirty=false;await fetch('/api/logout',{method:'POST'});location.reload()};
+async function start(){C=await(await fetch('/api/content',{cache:'no-store'})).json();$('#login').hidden=true;$('#app').hidden=false;render()}
+(async()=>{if((await(await fetch('/api/session')).json()).authed)start()})();
+
+// ---------- save ----------
+$('#save').onclick=async()=>{
+  const r=await fetch('/api/content',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(C)});
+  if(r.status===401){toast('Session expired. Please log in again.',1);return}
+  if(!r.ok){toast('Save failed',1);return}
+  dirty=false;$('#save').disabled=true;$('#st').textContent='Saved';$('#st').className='';toast('Saved. Changes are live.')};
+
+// ---------- images ----------
+async function prep(file){
+  if(file.type==='image/gif')return file;
+  try{const b=await createImageBitmap(file),s=Math.min(1,2400/Math.max(b.width,b.height));
+    if(s===1&&file.size<2.5e6)return file;
+    const c=document.createElement('canvas');c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext('2d').drawImage(b,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(x=>r(x||file),'image/jpeg',.88))}catch{return file}}
+async function upload(file){
+  const r=await fetch('/api/upload',{method:'POST',body:await prep(file)});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Upload failed');return j.url}
+const hasFiles=e=>[...(e.dataTransfer?.types||[])].includes('Files');
+function dropzone(el,cb){
+  ['dragenter','dragover'].forEach(n=>el.addEventListener(n,e=>{if(hasFiles(e)){e.preventDefault();el.classList.add('over')}}));
+  el.addEventListener('dragleave',()=>el.classList.remove('over'));
+  el.addEventListener('drop',e=>{el.classList.remove('over');if(!hasFiles(e))return;e.preventDefault();e.stopPropagation();
+    cb([...e.dataTransfer.files].filter(f=>f.type.startsWith('image/')))})}
+function imgDrop(obj,key,label){
+  const box=h('div',{class:'drop img'}),pick=h('input',{type:'file',accept:'image/*',hidden:true});
+  const draw=()=>{box.replaceChildren(obj[key]?h('img',{src:obj[key]}):null,h('span',{},obj[key]?'Drop a new image to replace it':'Drop an image here, or click to choose'))};
+  const go=async fs=>{if(!fs[0])return;box.classList.add('busy');try{obj[key]=await upload(fs[0]);mark()}catch(e){toast(e.message,1)}box.classList.remove('busy');draw()};
+  draw();box.onclick=()=>pick.click();pick.onchange=()=>go([...pick.files]);dropzone(box,go);
+  return h('div',{class:'f'},h('div',{class:'lbl'},label),box,pick)}
+function field(label,obj,key,o={}){
+  const el=h(o.area?'textarea':'input',{rows:o.rows,type:'text',placeholder:o.ph||''});el.value=obj[key]||'';
+  el.addEventListener('input',()=>{obj[key]=el.value;mark()});return h('label',{class:'f'},h('span',{},label),el)}
+const move=(a,f,t)=>{const[x]=a.splice(f,1);a.splice(t,0,x)};
+function sortable(el,arr,i,listName,extra){ // drag-to-reorder
+  el.draggable=true;
+  el.addEventListener('dragstart',e=>{dragIdx=i;dragList=listName;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','x')});
+  el.addEventListener('dragend',()=>{dragIdx=null});
+  el.addEventListener('dragover',e=>{if(dragIdx!=null&&dragList===listName){e.preventDefault();el.classList.add('over')}});
+  el.addEventListener('dragleave',()=>el.classList.remove('over'));
+  el.addEventListener('drop',e=>{if(dragIdx==null||dragList!==listName)return;e.preventDefault();e.stopPropagation();move(arr,dragIdx,i);dragIdx=null;mark();render()})}
+const nice=n=>n.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+
+// ---------- views ----------
+function render(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  $('#view').replaceChildren(...(tab==='gallery'?galleryView():tab==='stories'?(editing?storyEditor():storiesView()):homeView()))}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.t;editing=null;render()});
+
+function galleryView(){
+  const zone=h('div',{class:'drop'},'Drop photos here to add them to the gallery (or click to choose files)'),pick=h('input',{type:'file',accept:'image/*',multiple:true,hidden:true});
+  const add=async fs=>{let n=0;zone.classList.add('busy');
+    for(const f of fs){toast(`Uploading ${++n} of ${fs.length}…`);try{C.gallery.push({id:'g'+Date.now()+n,title:nice(f.name),category:'nature',image:await upload(f),camera:'',lens:'',iso:'',shutter:''});mark()}catch(e){toast(f.name+': '+e.message,1)}}
+    render()};
+  zone.onclick=()=>pick.click();pick.onchange=()=>add([...pick.files]);dropzone(zone,add);
+  const grid=h('div',{class:'grid'},C.gallery.map((p,i)=>{
+    const c=h('div',{class:'card',title:'Click to edit. Drag to reorder. Drop an image file on it to replace its photo.',onclick:()=>photoModal(p)},
+      h('span',{class:'n'},i+1),h('img',{src:p.image,alt:'',draggable:'false'}),h('div',{class:'cap'},h('b',{},p.title||'Untitled'),h('small',{},CATS[p.category])));
+    sortable(c,C.gallery,i,'gallery');
+    dropzone(c,async fs=>{if(!fs[0])return;try{p.image=await upload(fs[0]);mark();render()}catch(e){toast(e.message,1)}});
+    return c}));
+  return[h('h2',{},`Gallery (${C.gallery.length} photos)`),zone,pick,h('p',{class:'hint'},'Drag cards to change their order on the site. Click a card to edit its title, category and camera details.'),grid]}
+
+function photoModal(p){
+  const close=()=>{m.remove();render()};
+  const cat=h('select',{},Object.entries(CATS).map(([k,v])=>h('option',{value:k,selected:k===p.category},v)));
+  cat.onchange=()=>{p.category=cat.value;mark()};
+  const m=h('div',{class:'modal',onclick:e=>{if(e.target===m)close()}},h('div',{class:'box'},
+    h('h2',{style:'margin-top:0'},'Edit photo'),imgDrop(p,'image','Photo'),field('Title',p,'title'),
+    h('label',{class:'f'},h('span',{},'Category'),cat),
+    h('div',{class:'row'},field('Camera',p,'camera',{ph:'e.g. Nikon Z9'}),field('Lens',p,'lens',{ph:'e.g. 400mm f/2.8'})),
+    h('div',{class:'row'},field('ISO',p,'iso',{ph:'e.g. ISO 800'}),field('Exposure',p,'shutter',{ph:'e.g. 1/500s at f/5.6'})),
+    h('div',{style:'display:flex;gap:10px;margin-top:16px'},
+      h('button',{class:'btn danger',onclick:()=>{if(confirm('Delete this photo from the gallery?')){C.gallery.splice(C.gallery.indexOf(p),1);mark();close()}}},'Delete'),
+      h('span',{class:'sp',style:'flex:1'}),h('button',{class:'btn pri',onclick:close},'Done'))));
+  document.body.append(m)}
+
+function storiesView(){
+  const list=h('div',{class:'list'},C.stories.map((s,i)=>{
+    const it=h('div',{class:'item'},h('img',{src:s.cover||'',alt:''}),h('div',{class:'t'},h('b',{},s.title||'Untitled'),h('div',{class:'hint'},`${s.label} · ${s.readTime} min`)),
+      h('button',{class:'btn',onclick:()=>{editing=s;render()}},'Edit'),
+      h('button',{class:'btn danger',onclick:()=>{if(confirm(`Delete "${s.title}"?`)){C.stories.splice(i,1);mark();render()}}},'Delete'));
+    sortable(it,C.stories,i,'stories');return it}));
+  return[h('h2',{},'Travel stories & essays'),
+    h('button',{class:'btn pri',onclick:()=>{const s={id:'story-'+Date.now().toString(36),title:'Untitled essay',label:`Expedition Essay #${String(C.stories.length+1).padStart(2,'0')}`,tag:'',excerpt:'',readTime:'5',cover:'',body:''};C.stories.push(s);mark();editing=s;render()}},'+ New essay'),
+    h('p',{class:'hint'},'Drag rows to change the order on the homepage.'),list]}
+
+function storyEditor(){
+  const s=editing,ta=h('textarea',{rows:22,placeholder:'Write your essay here.\n\nSeparate paragraphs with a blank line.\n## Starts a heading\nDrop an image onto this box to insert it at the cursor.'});
+  ta.value=s.body||'';ta.addEventListener('input',()=>{s.body=ta.value;mark()});
+  dropzone(ta,async fs=>{for(const f of fs){try{const u=await upload(f),pos=ta.selectionStart,pre=ta.value.slice(0,pos),post=ta.value.slice(pos);
+      const ins=(pre&&!pre.endsWith('\n\n')?'\n\n':'')+`![${nice(f.name)}](${u})\n\n`;ta.value=pre+ins+post;s.body=ta.value;mark()}catch(e){toast(e.message,1)}}});
+  return[h('button',{class:'btn',onclick:()=>{editing=null;render()}},'← Back to stories'),h('h2',{},'Edit essay'),
+    h('div',{class:'row'},h('div',{},field('Title',s,'title'),field('Label (badge on card)',s,'label'),field('Category line',s,'tag',{ph:'e.g. Alpine & Ridge Lines'}),field('Read time (minutes)',s,'readTime')),imgDrop(s,'cover','Cover image')),
+    field('Short summary (shown on the homepage card)',s,'excerpt',{area:1,rows:3}),
+    h('label',{class:'f'},h('span',{},'Essay text'),ta),
+    h('p',{class:'hint'},`After saving, the essay is at /story.html?id=${s.id}`)]}
+
+function homeView(){
+  return[h('h2',{},'Hero (top of homepage)'),imgDrop(C.hero,'image','Banner image'),
+    field('Small heading',C.hero,'eyebrow'),field('Main title',C.hero,'title'),field('Subtitle',C.hero,'subtitle',{area:1,rows:3}),
+    h('h2',{},'About the photographer'),imgDrop(C.about,'image','Portrait'),
+    h('div',{class:'row'},field('Name',C.about,'name'),field('Role',C.about,'role')),field('Experience badge',C.about,'years',{ph:'e.g. 15+ Years'}),
+    field('Bio',C.about,'bio',{area:1,rows:5}),field('Quote',C.about,'quote',{area:1,rows:3})]}
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story | AL3 Photography</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
+            darkBg:'#0a0a0a', cardBg:'#121212', borderDark:'#262626', lightText:'#f5f5f5', mutedText:'#888888' },
+            fontFamily: { sans: ['Inter','sans-serif'] } } } }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-darkBg text-lightText font-sans antialiased">
+    <header class="border-b border-borderDark">
+        <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="/" class="text-xl font-bold tracking-widest">AL3 <span class="text-xs font-normal text-mutedText">PHOTOGRAPHY</span></a>
+            <a href="/#stories" class="text-xs font-semibold tracking-wider hover:text-mutedText"><i class="fa-solid fa-arrow-left mr-2"></i>ALL STORIES</a>
+        </div>
+    </header>
+    <main class="max-w-3xl mx-auto px-6 py-16">
+        <article id="story"><p class="text-mutedText text-sm">Loading…</p></article>
+    </main>
+    <footer class="border-t border-borderDark py-8 text-center text-xs text-mutedText font-mono">&copy; 2026 AL3 Photography. All Rights Reserved.</footer>
+<script>
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = u => /^(\/|assets\/|https:\/\/)/.test(u) ? u : '';
+function render(body) {
+    return String(body || '').split(/\n{2,}/).map(b => b.trim()).filter(Boolean).map(b => {
+        const img = /^!\[(.*?)\]\((.*?)\)$/.exec(b);
+        if (img && safeUrl(img[2])) return `<figure class="my-10"><img src="${esc(img[2])}" alt="${esc(img[1])}" class="w-full " loading="lazy">${img[1] ? `<figcaption class="mt-2 text-xs font-mono text-mutedText">${esc(img[1])}</figcaption>` : ''}</figure>`;
+        if (b.startsWith('## ')) return `<h2 class="text-2xl font-bold uppercase tracking-wide mt-12 mb-4">${esc(b.slice(3))}</h2>`;
+        return `<p class="text-mutedText font-light leading-8 text-base sm:text-lg mb-6">${esc(b).replace(/\n/g, '<br>')}</p>`;
+    }).join('');
+}
+(async () => {
+    const id = new URLSearchParams(location.search).get('id');
+    const el = document.getElementById('story');
+    try {
+        const c = await (await fetch('/api/content', { cache: 'no-store' })).json();
+        const s = (c.stories || []).find(x => x.id === id);
+        if (!s) { el.innerHTML = '<p class="text-mutedText">Story not found.</p>'; return; }
+        document.title = s.title + ' | AL3 Photography';
+        el.innerHTML = `
+            <p class="text-xs font-mono tracking-widest uppercase text-mutedText mb-3">${esc(s.label)} · ${esc(s.tag)}</p>
+            <h1 class="text-3xl sm:text-5xl font-extrabold uppercase tracking-tight leading-tight mb-4">${esc(s.title)}</h1>
+            <p class="text-xs font-mono text-mutedText mb-10">${esc(s.readTime)} min read</p>
+            ${safeUrl(s.cover) ? `<img src="${esc(s.cover)}" alt="${esc(s.title)}" class="w-full  mb-12">` : ''}
+            ${render(s.body)}`;
+    } catch { el.innerHTML = '<p class="text-mutedText">Could not load this story.</p>'; }
+})();
+</script>
+</body>
+</html>
